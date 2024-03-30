@@ -1,0 +1,90 @@
+.cards{
+    .user-cards{
+        justify-content: space-between;
+        .user-card__left{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-left: auto;
+            margin-right: auto;
+            gap: 0px;
+            margin-bottom: 10px;
+            .left-info{
+                h3{
+                    font-size: 18px;
+                    text-align: center;
+                }     
+            }
+            h4{
+                font-size: 18px;
+                text-align: center;
+            }
+        }
+        .user-card__right{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            button{
+                padding: 5px 6px;
+                border: none;
+                cursor: pointer;
+                box-shadow: 1px 1px 1px #e4e4e4;
+                transition: 0.5s;
+                &:hover{
+                    box-shadow: 2px 2px 10px #fff;
+                    img{
+                        transform: scale(1.1);
+                    }
+                }
+                img{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 20px;
+                    height: 20px;
+                    transition: 0.3s;
+                }
+            }
+            button:nth-child(3){
+                padding:2px 10px;
+                img{
+                    width: 15px;
+                    height: 20px;
+                }
+            }
+        }
+        @media(min-width:380px) {
+            display: flex;
+            align-items: start;
+            .user-card__left{
+                margin-left: 0;
+                align-items: flex-start;
+                margin-bottom: 0;
+                gap: 50px;
+                .left-info{
+                    h3{
+                        text-align: left;
+                        font-size: 18px;
+                    }
+                    
+                }
+                h4{
+                    text-align: left;
+                    font-size: 18px;
+                }
+                
+            }
+            .user-card__right{
+                button{
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+            
+        }
+    }
+    
+}
+
