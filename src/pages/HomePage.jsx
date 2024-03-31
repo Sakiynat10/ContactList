@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import { Container, Form, Button, InputGroup } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
@@ -10,6 +10,8 @@ import "./HomePage.scss"
 
 
 const usersJSON = localStorage.getItem('users');
+
+
 
 class HomePage extends Component {
   state = {
@@ -71,24 +73,26 @@ class HomePage extends Component {
       importance:"Family"
     } ,
     search:"" ,
-    selected:null
+    selected: null,
   };
   render() {
+    let newUsers = [];
     const { validated , users , user , search , selected } = this.state;
+
     const handleSubmit = (e) => {
       e.preventDefault();
       const form = e.currentTarget;
       if(form.checkValidity()) {
-        let newUsers;
-        if(selected === null){
-          newUsers = [...users, {...user ,  id:Date.now() , favourite:false}]
-        }else{
-          newUsers = users.map((el) => {
+        if(selected){
+          newUsers = users.map(el => {
             if(el.id === selected){
               return user
             }
             return el
           })
+          this.setState({selected:null})
+        }else{
+          newUsers = [  ...users, {...user ,  id: Date.now() , favourite:false}]
         }
         this.setState({users: newUsers })
         localStorage.setItem("users" , JSON.stringify(newUsers));
@@ -144,24 +148,24 @@ class HomePage extends Component {
       this.setState({search: e.target.value});
     }
 
+
     const editUser = (id) =>{
-      let user = users.find((user) => user.id === id);
+      let user = users.find((el) => el.id === id);
       this.setState({user , selected:id});
     }
 
 
-
-    // const allContacts = users;
+    const allContacts = users;
     const favouriteContacts = users.filter((user) => user.favourite)
 
-    const results = users.filter(user => user.name.includes(search.trim().toLowerCase()))
-
+    // const results = allContacts.filter(el => el.name.includes(search.trim().toLowerCase()))
+    
 
     return (
       <Container className="form-container">
         <UsersForm selected={selected} user={user} handleValue={handleValue} validated={validated} handleSubmit={handleSubmit} />
         <InputGroup className="mb-3 input-group">
-          <Form.Control value={search} onChange={handleSearch} className="search-input" placeholder="Searching person ..."
+          <Form.Control type="text" value={search} onChange={handleSearch} className="search-input" placeholder="Searching person ..."
           />
           <Button variant="outline-secondary" className="d-flex align-items-center select-btn" id="button-addon1">
             <Form.Select  className="form-select">
@@ -187,7 +191,7 @@ class HomePage extends Component {
           </TabList>
 
           <TabPanel className="tab-panel">
-            { results.map((el) => <UsersCard key={el.id} editUser={editUser} deleteCard={deleteCard} deleteFavouriteCard={deleteFavouriteCard} favouriteCard={favouriteCard} {...el}/>)}            
+            { allContacts.map((el) => <UsersCard key={el.id} editUser={editUser} deleteCard={deleteCard} deleteFavouriteCard={deleteFavouriteCard} favouriteCard={favouriteCard} {...el}/>)}            
           </TabPanel>
           <TabPanel className="tab-panel">
             {favouriteContacts.map((el) =><UsersCard key={el.id} editUser={editUser} deleteFavouriteCard={deleteFavouriteCard} deleteCard={deleteCard} {...el}/>)}
