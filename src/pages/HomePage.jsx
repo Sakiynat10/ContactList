@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component , createRef} from "react";
 import { Container, Form, Button, InputGroup } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
@@ -14,70 +14,74 @@ const usersJSON = localStorage.getItem('users');
 
 
 class HomePage extends Component {
-  state = {
-    validated: false,
-    users: JSON.parse(usersJSON) || [
-      {
-        id:1,
-        name:"Asilbek" , 
-        lastName:"Xoliyorov" ,
-        phoneNumber:"+998937550412" ,
-        importance:"Family" ,
-        favourite: false
+  constructor(props){
+    super(props);
+    this.searchRef = createRef()
+    this.state = {
+      validated: false,
+      users: JSON.parse(usersJSON) || [
+        {
+          id:1,
+          name:"Asilbek" , 
+          lastName:"Xoliyorov" ,
+          phoneNumber:"+998937550412" ,
+          importance:"Family" ,
+          favourite: false
+        } ,
+        {
+          id:2,
+          name:"Asadbek" , 
+          lastName:"Normurodov" ,
+          phoneNumber:"+998995001005" ,
+          importance:"Friend" ,
+          favourite: true
+        } , 
+        {
+          id:3,
+          name:"Shaxriyor" , 
+          lastName:"Ergashev" ,
+          phoneNumber:"+998995042656" ,
+          importance:"Relative" ,
+          favourite: false
+        } ,
+        {
+          id:4,
+          name:"Daler" , 
+          lastName:"Qahramonov" ,
+          phoneNumber:"+998937552030" ,
+          importance:"Friend" ,
+          favourite: true
+        } ,
+        {
+          id:5,
+          name:"Madina" , 
+          lastName:"Xoliyorova" ,
+          phoneNumber:"+998123456789" ,
+          importance:"Family" ,
+          favourite: true
+        } ,
+        {
+          id:6,
+          name:"Nodirbek" , 
+          lastName:"Normo'minov" ,
+          phoneNumber:"+998937550412" ,
+          importance:"Relative" ,
+          favourite: false
+        }
+      ] , 
+      user: {
+        name : "" ,
+        lastName: "" ,
+        phoneNumber: "" ,
+        importance:"Family"
       } ,
-      {
-        id:2,
-        name:"Asadbek" , 
-        lastName:"Normurodov" ,
-        phoneNumber:"+998995001005" ,
-        importance:"Friend" ,
-        favourite: true
-      } , 
-      {
-        id:3,
-        name:"Shaxriyor" , 
-        lastName:"Ergashev" ,
-        phoneNumber:"+998995042656" ,
-        importance:"Relative" ,
-        favourite: false
-      } ,
-      {
-        id:4,
-        name:"Daler" , 
-        lastName:"Qahramonov" ,
-        phoneNumber:"+998937552030" ,
-        importance:"Friend" ,
-        favourite: true
-      } ,
-      {
-        id:5,
-        name:"Madina" , 
-        lastName:"Xoliyorova" ,
-        phoneNumber:"+998123456789" ,
-        importance:"Family" ,
-        favourite: true
-      } ,
-      {
-        id:6,
-        name:"Nodirbek" , 
-        lastName:"Normo'minov" ,
-        phoneNumber:"+998937550412" ,
-        importance:"Relative" ,
-        favourite: false
-      }
-    ] , 
-    user: {
-      name : "" ,
-      lastName: "" ,
-      phoneNumber: "" ,
-      importance:"Family"
-    } ,
-    search:"" ,
-    selected: null,
-  };
+      search:"" ,
+      importance:'All'
+    }
+  }
   render() {
     let newUsers = [];
-    const { validated , users , user , search , selected } = this.state;
+    const { validated , users , user , search , selected ,  importance } = this.state;
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -144,8 +148,10 @@ class HomePage extends Component {
       })
     }
 
-    const handleSearch = ( e ) => {
-      this.setState({search: e.target.value});
+    const handleSearch = () => {
+      // this.setState({search: e.target.value});
+      console.log(this.searchRef.current.value);
+      this.setState({search: this.searchRef.current.value.trim().toLowerCase()})
     }
 
 
@@ -154,8 +160,20 @@ class HomePage extends Component {
       this.setState({user , selected:id});
     }
 
+    const handleImportance = (e) => {
+      this.setState({importance: e.target.value})
+      console.log(e.target.value);
+    }
 
-    const allContacts = users;
+    // let allContacts = users.filter((user) => user.name.includes(search));
+
+    let allContacts = users
+
+    if(importance !== "All"){
+      allContacts = allContacts.filter((user) => user.importance === importance)
+    }
+
+
     const favouriteContacts = users.filter((user) => user.favourite)
 
     // const results = allContacts.filter(el => el.name.includes(search.trim().toLowerCase()))
@@ -165,10 +183,10 @@ class HomePage extends Component {
       <Container className="form-container">
         <UsersForm selected={selected} user={user} handleValue={handleValue} validated={validated} handleSubmit={handleSubmit} />
         <InputGroup className="mb-3 input-group">
-          <Form.Control type="text" value={search} onChange={handleSearch} className="search-input" placeholder="Searching person ..."
+          <Form.Control ref={this.searchRef} type="text" value={search} onChange={handleSearch} className="search-input" placeholder="Searching person ..."
           />
           <Button variant="outline-secondary" className="d-flex align-items-center select-btn" id="button-addon1">
-            <Form.Select  className="form-select">
+            <Form.Select onChange={handleImportance} value={importance} className="form-select">
               <option value="All" >All</option>
               <option value="Family" >Family</option>
               <option value="Friend" >Friend</option>
