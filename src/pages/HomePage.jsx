@@ -76,7 +76,8 @@ class HomePage extends Component {
         importance:"Family"
       } ,
       search:"" ,
-      importance:'All'
+      importance:'All' ,
+      selected: null
     }
   }
   render() {
